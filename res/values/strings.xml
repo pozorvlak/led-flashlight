@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="button">Please do not press this button</string>
+    <string name="app_name">LED Flashlight</string>
+<string name="message">Please do not press this button again.</string>
+</resources>
