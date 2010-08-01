@@ -8,6 +8,6 @@
 	android:id="@+id/onoff"
 	android:layout_width="fill_parent" 
     android:layout_height="fill_parent" 
-    android:text="@string/button"
+    android:text="@string/turn_on"
     />
 </LinearLayout>

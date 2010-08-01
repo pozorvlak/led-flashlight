@@ -1,8 +1,10 @@
 package uk.org.assyrian.LEDFlashlight;
 
+import java.util.List;
+
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,32 +13,60 @@ import android.widget.Button;
 public class LEDFlashlight extends Activity {
 	
 	private Button onOffButton;
-	private AlertDialog mDialog;
+	private String mFlashMode;
+	private boolean mIsFlashOn;
+	private Camera mCamera = null;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        DialogInterface.OnClickListener doNothing = new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// do nothing
-			}
-		};
-        mDialog = new AlertDialog.Builder(this)
-        	.setMessage(getString(R.string.message))
-        	.setPositiveButton("OK!", doNothing)
-        	.setNegativeButton("Boo!", doNothing)
-        	.create();
         this.onOffButton = (Button) this.findViewById(R.id.onoff);
         this.onOffButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				mDialog.show();
+				if (mIsFlashOn) {
+					mIsFlashOn = turnFlashOff();
+				} else {
+					mIsFlashOn = turnFlashOn();
+				}
+				onOffButton.setText(mIsFlashOn ? R.string.turn_off : R.string.turn_on);
 			}
 		});
     }
+
+    private boolean turnFlashOff() {
+    	mCamera.stopPreview();
+    	Parameters p = mCamera.getParameters();
+    	p.setFlashMode(mFlashMode);
+    	mCamera.setParameters(p);
+		return false;
+	}
+
+	private boolean turnFlashOn() {
+		Parameters p = mCamera.getParameters();
+		List<String> flashModes	= p.getSupportedFlashModes();
+		if (flashModes.contains(Parameters.FLASH_MODE_TORCH)) {
+			mFlashMode = p.getFlashMode();
+			p.setFlashMode(Parameters.FLASH_MODE_TORCH);
+			mCamera.setParameters(p);
+			mCamera.startPreview();
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		mCamera.release();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mCamera = Camera.open();
+	}
 }
