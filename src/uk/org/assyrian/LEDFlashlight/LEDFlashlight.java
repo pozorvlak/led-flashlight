@@ -17,7 +17,6 @@ public class LEDFlashlight extends Activity {
 	private String mFlashMode;
 	private boolean mIsFlashOn;
 	private Camera mCamera = null;
-	private String IS_FLASH_ON = "isFlashOn";
 	
     /** Called when the activity is first created. */
     @Override
@@ -25,15 +24,14 @@ public class LEDFlashlight extends Activity {
     	// Log.d("LEDFlashlight", "entered onCreate");
     	super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        if (savedInstanceState == null) {
-        	mIsFlashOn = false;
-        } else {
-        	Boolean isFlashOn = (Boolean) savedInstanceState.getSerializable(IS_FLASH_ON);
-        	mIsFlashOn = (isFlashOn == null) ? false : isFlashOn;
-        }
         Log.d("LEDFlashlight", "Flashlight is" + (mIsFlashOn ? " " : " not ") + "on");
         this.onOffButton = (Button) this.findViewById(R.id.onoff);
-        this.onOffButton.setOnClickListener(new OnClickListener() {
+        setupButton();
+    }
+
+	private void setupButton() {
+		// Log.d("LEDFlashlight", "Setting up button");
+		this.onOffButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -42,10 +40,17 @@ public class LEDFlashlight extends Activity {
 				} else {
 					mIsFlashOn = turnFlashOn();
 				}
-				onOffButton.setText(mIsFlashOn ? R.string.turn_off : R.string.turn_on);
+				setButtonText();
 			}
 		});
-    }
+		setButtonText();
+		// Log.d("LEDFlashlight", "Set up button, text is " + onOffButton.getText());
+	}
+		
+	private void setButtonText() {
+		onOffButton.setText(mIsFlashOn ? R.string.turn_off : R.string.turn_on);
+		onOffButton.refreshDrawableState();
+	}
 
     private boolean turnFlashOff() {
     	// Log.d("LEDFlashlight", "Turning flash off");
@@ -82,21 +87,10 @@ public class LEDFlashlight extends Activity {
 	}
 	
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		// Log.d("LEDFlashlight", "Entering onSaveInstanceState");
-		super.onSaveInstanceState(outState);
-		outState.putSerializable(IS_FLASH_ON, mIsFlashOn);
-		// Log.d("LEDFlashlight", "Leaving onSaveInstanceState");
-	}
-	
-		@Override
 	protected void onResume() {
 		// Log.d("LEDFlashlight", "Entering onResume");
 		super.onResume();
 		mCamera = Camera.open();
-		if (mIsFlashOn) {
-			turnFlashOn();
-		}
 		// Log.d("LEDFlashlight", "Leaving onResume");
 	}
 }
