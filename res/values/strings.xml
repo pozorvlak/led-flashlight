@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LED Flashlight</string>
-    <string name="turn_on">Turn on flash</string>
-    <string name="turn_off">Turn off flash</string>
+    <string name="turn_on">TURN\nON\nFLASH</string>
+    <string name="turn_off">TURN\nOFF\nFLASH</string>
 </resources>

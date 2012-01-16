@@ -31,7 +31,8 @@ public class LEDFlashlight extends Activity {
 
 	private void setupButton() {
 		// Log.d("LEDFlashlight", "Setting up button");
-		this.onOffButton.setOnClickListener(new OnClickListener() {
+		Button button = this.onOffButton;
+		button.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -46,6 +47,11 @@ public class LEDFlashlight extends Activity {
 			}
 		});
 		setButtonText();
+		button.setBackgroundColor(0x000000);
+		// Black! Black! As black as your heart! What's for tea, mother? Worms?
+		button.setTextColor(0xFFFFFFFF); // white; note alpha channel
+		button.setTextSize(30);
+		button.setTypeface(button.getTypeface(), 1); // make it bold
 		// Log.d("LEDFlashlight", "Set up button, text is " + onOffButton.getText());
 	}
 		
