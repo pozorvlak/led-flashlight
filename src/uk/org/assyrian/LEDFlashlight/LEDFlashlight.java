@@ -37,8 +37,10 @@ public class LEDFlashlight extends Activity {
 			public void onClick(View v) {
 				if (mIsFlashOn) {
 					mIsFlashOn = turnFlashOff();
+					v.setKeepScreenOn(false);
 				} else {
 					mIsFlashOn = turnFlashOn();
+					v.setKeepScreenOn(true);
 				}
 				setButtonText();
 			}
